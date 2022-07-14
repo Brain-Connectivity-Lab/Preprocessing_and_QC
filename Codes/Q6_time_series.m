@@ -1,5 +1,6 @@
 % Quality control Q6
 % Plot time series from fMRI images and head motion
+% Show their correlations before and after preprocessing
 % Xin Di, July 13, 2022
 
 clear
@@ -12,6 +13,7 @@ for subji = 1:length(subjfolder)
     fprintf('Processing subject %d ...',subji)
     
     
+    % load the raw functional images and calculate the global mean and pairwise variance
     v_all = spm_vol(['F:\fMRI_QC\fmri-open-qc-rest_bias_corrected\' subjfolder(subji).name '\func\' subjfolder(subji).name '_ses-01_task-rest_run-01_bold.nii']);
     
     clear a dt
@@ -23,14 +25,17 @@ for subji = 1:length(subjfolder)
         a(:,imagei) = y(:);
     end
     
-    gm = mean(mean(a));
+    gm = mean(mean(a)); % grand mean (4D)
+    
+    % calculate pairwise variance
     for imagei = 1:length(v_all)-1
         dt(imagei) = (mean((a(:,imagei) - a(:,imagei+1)).^2))/gm;
     end
     
-    meany = mean(a)./gm;
+    meany = mean(a)./gm; % scaled global mean
     
     
+    % load rigid body motion parameters and calculate framewise displacement 
     rp = load(['F:\fMRI_QC\fmri-open-qc-rest\' subjfolder(subji).name '\func\rp_' subjfolder(subji).name '_ses-01_task-rest_run-01_bold.txt']);
 
     fd_trans = fd_calc(rp(:,1:3));
@@ -43,11 +48,14 @@ for subji = 1:length(subjfolder)
     fd_mean_rotat(subji,1) = mean(fd_rotat);
     
     
+    % load WM and CSF signals and calculate their difference over time
     load(fullfile('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected', subjfolder(subji).name, 'masks', 'covariance_wm_csf.mat'), 'pca_WM', 'pca_CSF');
-    
-    
+
+
+    % load the preprocessed functional images and calculate the global mean and pairwise variance
     clear ar_mask dtr
     
+    % load the brain mask from the GLM step
     v_mask = spm_vol(fullfile('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected\', subjfolder(subji).name, 'glm_denoise', 'mask.nii'));
     y_mask = spm_read_vols(v_mask);
     a_mask = y_mask(:);
@@ -60,12 +68,14 @@ for subji = 1:length(subjfolder)
         ar_mask(:,imagei) = ar(a_mask==1);
     end
     
-    gmr = mean(mean(ar_mask));
+    gmr = mean(mean(ar_mask)); % grand mean (4D) from the residual images (preprocessed images)
+    
+    % calculate pairwise variance from the residual images (preprocessed images)
     for imagei = 1:length(v_all)-1
         dtr(imagei) = (mean((ar_mask(:,imagei) - ar_mask(:,imagei+1)).^2));
     end
     
-    meanyr = mean(ar_mask);
+    meanyr = mean(ar_mask); % scaled global mean from the residual images (preprocessed images)
     
     
     % plots
