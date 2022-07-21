@@ -28,7 +28,9 @@ end
 
 
 % Plot all the parameters across participants
-figure('DefaultAxesFontSize',18)
+fh = figure('DefaultAxesFontSize',18);
+fh.WindowState = 'maximized';
+
 subplot(4,1,1)
 bar(n_image)
 title('# of fMRI images')
@@ -60,4 +62,6 @@ xline([20.5,40.5,56.5,79.5,99.5,119.5]);
 xticks([10,30,48,68,89,109,129])
 xticklabels({'Rest1','Rest2','Rest3','Rest4','Rest5','Rest6','Rest7'})
 box off
+
+exportgraphics(gcf,['C:\Users\synge\Documents\GitHub\Preprocessing_and_QC\QC_images\Q1a_scanning_parameters.jpg']);
 
