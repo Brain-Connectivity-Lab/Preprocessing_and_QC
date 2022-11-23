@@ -6,7 +6,6 @@
 clear matlabbatch
 
 subjfolder = dir('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected\sub*');
-subjfolder = subjfolder(91:end); % subji 90 CSF mask empty
 
 for subji = 1:length(subjfolder)
     matlabbatch{subji}.spm.stats.fmri_est.spmmat = {fullfile('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected', subjfolder(subji).name, 'glm_denoise', 'SPM.mat')};

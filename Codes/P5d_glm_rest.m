@@ -6,7 +6,6 @@
 clear matlabbatch
 
 subjfolder = dir('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected\sub*');
-subjfolder = subjfolder(91:end); % subji 90 CSF mask empty
 
 for subji = 1:length(subjfolder)
     v = spm_vol(fullfile('F:\fMRI_QC\fmri-open-qc-rest_bias_corrected\', subjfolder(subji).name, 'func', ['w', subjfolder(subji).name '_ses-01_task-rest_run-01_bold.nii']));
