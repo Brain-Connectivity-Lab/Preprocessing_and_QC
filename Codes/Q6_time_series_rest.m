@@ -145,6 +145,9 @@ for subji = 1:length(subjfolder)
     yticklabels({'V raw','FD T','FD R','d(WM)','d(CSF)','V final'})
     colorbar
     title('Correlation');
+    mat_mask = [0 1 1 1 1 0;1 0 0 0 0 1;1 0 0 0 0 1;1 0 0 0 0 1;1 0 0 0 0 1; 0 1 1 1 1 0];
+    [x,y] = find((corr_dt>0.3).*mat_mask);
+    hold on; scatter(x,y,[],'r','filled')
 
     exportgraphics(gcf,['C:\Users\synge\Documents\GitHub\Preprocessing_and_QC\QC_images\Q6_time_series\' subjfolder(subji).name '.jpg']);
     

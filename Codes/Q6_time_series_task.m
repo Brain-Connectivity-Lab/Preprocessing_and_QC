@@ -93,6 +93,9 @@ for subji = 1:length(subjfolder)
     yticklabels({'G raw','HM 1','HM 2','HM 3','HM 4','HM 5','HM 6','Task','Control'})
     colorbar
     title('Correlation');
+    mat_mask = [zeros(7,7) ones(7,2);ones(2,7) zeros(2,2)];
+    [x,y] = find((corr_raw>0.3).*mat_mask);
+    hold on; scatter(x,y,[],'r','filled')
     
     subplot(2,4,8)
     imagesc(corr_dt)
@@ -101,6 +104,9 @@ for subji = 1:length(subjfolder)
     yticklabels({'V raw','FD T','FD R','d(Task)','d(Control)'})
     colorbar
     title('Correlation');
+    mat_mask = [0 0 0 1 1;0 0 0 1 1;0 0 0 1 1;0 0 0 0 0;0 0 0 0 0];
+    [x,y] = find((corr_dt>0.3).*mat_mask);
+    hold on; scatter(x,y,[],'r','filled')
 
     exportgraphics(gcf,['C:\Users\synge\Documents\GitHub\Preprocessing_and_QC\QC_images\Q6_time_series_task\' subjfolder(subji).name '.jpg']);
     
